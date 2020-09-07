@@ -15,6 +15,7 @@
         />
 
     <ImageButton
+        android:layout_marginTop="50dp"
         android:scaleType="fitXY"
         android:id="@+id/btn_avatar"
         app:layout_constraintBottom_toTopOf="@+id/tf_FirstName"
@@ -62,7 +63,9 @@
             app:layout_constraintTop_toBottomOf="@+id/tf_FirstName" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputLayout
+        android:textColorHint="@color/babyblue"
         app:layout_constraintTop_toBottomOf="@+id/tf_LastName"
         android:id="@+id/tf_Email"
         android:layout_width="match_parent"
@@ -74,7 +77,6 @@
             android:id="@+id/edt_Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:hint="Email"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -3,10 +3,11 @@ package com.vncoder.mvvm.View.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
-import androidx.annotation.Nullable
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -20,7 +21,8 @@ import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.retrofit2_employee.Adapter.AdapterEmployee
 import com.vncoder.retrofit2_employee.Model.Contact
 import kotlinx.android.synthetic.main.activity_main.*
-
+import retrofit2.Call
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private val ActivityRequestCode2 = 2
@@ -34,11 +36,10 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.rv_cyclerview)
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
         getUserList()
 
         btn_Create.setOnClickListener {
-            val intent = Intent(this,CreateActivity::class.java)
+            val intent = Intent(this, CreateActivity::class.java)
             startActivity(intent)
         }
 
@@ -46,8 +47,14 @@ class MainActivity : AppCompatActivity() {
 
     fun getUserList() {
         mainViewModel!!.allUsers.observe(this,
-            { userList -> setRecyclerView(userList as List<Contact>) })
+                { userList -> setRecyclerView(userList as List<Contact>) })
     }
+
+    fun getDeleteUser(){
+        mainViewModel!!.deleteUser
+        }
+
+
 
     private fun setRecyclerView(contactList: List<Contact>) {
         adapterEmployee = AdapterEmployee(onClickListener, contactList as ArrayList<Contact>)
@@ -63,7 +70,6 @@ class MainActivity : AppCompatActivity() {
 
     private var onClickListener = object : AdapterEmployee.OnItemClickListener {
         override fun onClickEmployee(contact: Contact) {
-
             val replyintent = Intent(this@MainActivity, infoActivity::class.java)
             val bundle = Bundle()
             bundle.putSerializable("detailEmployee", contact)
@@ -72,8 +78,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onLongClickEmployee(contact: Contact) {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
+            builder.setTitle("notification")
+            builder.setMessage("Do you want delete item ?")
+            builder.setCancelable(false)
+            builder.setPositiveButton("Yes")
+            { dialogInterface, i ->
+                 getDeleteUser()
+            }
+            builder.setNegativeButton("No")
+            { dialogInterface, i ->
+                dialogInterface.dismiss()
+            }
+            val alertDialog = builder.create()
+            alertDialog.show()
 
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -86,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 var listResult = if (query!!.isEmpty()) {
-
+                    null
                 } else {
                     adapterEmployee.exampleList.filter {
                         it.Name?.toLowerCase()!!.contains(query.toString())
@@ -98,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onQueryTextChange(newText: String?): Boolean {
                 var listResult = if (newText!!.isEmpty()) {
-
+                    null
                 } else {
                     adapterEmployee.exampleList.filter {
                         it.FirstName?.toLowerCase()!!.contains(
@@ -106,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-
+                adapterEmployee.exampleList = listResult as ArrayList<Contact>
                 adapterEmployee.notifyDataSetChanged()
 
                 return false

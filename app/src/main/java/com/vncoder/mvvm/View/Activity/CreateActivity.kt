@@ -8,16 +8,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import com.vncoder.mvvm.R
+import com.vncoder.mvvm.ViewModel.MainViewModel
+import com.vncoder.retrofit2_employee.Model.ContactCreate
+import com.vncoder.retrofit2_employee.Model.PostContact
+import com.vncoder.retrofit2_employee.Model.custom
 import kotlinx.android.synthetic.main.activity_create.*
-
+import java.util.regex.Pattern
 
 
 class CreateActivity : AppCompatActivity() {
+    var mainViewMode : MainViewModel? = null
     val KITKAT_VALUE = 1002
     private var REQUEST_SELECT_IMAGE =1
     private var uriImage :String? = null
+    val EMAIL_ADDRESS: Pattern = Pattern.compile(
+        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" + "\\@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" +
+                "\\." + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                ")+"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,17 +83,36 @@ class CreateActivity : AppCompatActivity() {
         })
 
         btn_create.setOnClickListener {
+            if (edt_FirstName.text.toString().trim().isEmpty()) {
+                edt_FirstName.setError("FirstName not null")
+            } else if (edt_LastName.text.toString().trim().isEmpty()) {
+                edt_LastName.setError("LastName not null")
+            } else if (edt_Email.text.toString().trim().isEmpty()
+                || !EMAIL_ADDRESS.matcher(edt_Email.text.toString()).matches()
+            ) {
+                edt_Email.setError("Email invalid")
+            } else {
 
+                var custom: custom = custom()
+                custom.string_Test_Field = uriImage.toString()
+
+                var ContactCreate: ContactCreate = ContactCreate()
+                val postContact: PostContact = PostContact()
+                postContact.FirstName = edt_FirstName.text.toString().trim()
+                postContact.LastName = edt_LastName.text.toString().trim()
+                postContact.Email = edt_Email.text.toString().trim()
+                postContact.custom = custom
+                ContactCreate.PostContact = postContact
+
+                mainViewMode?.createUser
+
+                finish()
+            }
         }
-
-
 
         btn_cancel.setOnClickListener {
-            setResult(Activity.RESULT_CANCELED)
             finish()
         }
-
-
 
     }
 

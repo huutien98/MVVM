@@ -12,7 +12,7 @@ interface RestApiService {
     @POST("contact")
     fun postContact(
     @Body
-    ContactCreate : ContactCreate
+    ContactCreate: ContactCreate?
     ): Call<ContactCreate>
 
     @DELETE("contact/{contact_id}")
