@@ -17,7 +17,7 @@ class ContactRepository (private val application: Application) {
     private var ContactCreate: ContactCreate? = null
     private var Contact: Contact? = null
     private var listContact: ArrayList<Contact> = ArrayList()
-    private val mutableLiveData2: MutableLiveData<Contact> = MutableLiveData<Contact>()
+
     private val mutableLiveData: MutableLiveData<List<Contact>> = MutableLiveData<List<Contact>>()
 
     fun getMutableLiveData(): MutableLiveData<List<Contact>> {
@@ -33,7 +33,6 @@ class ContactRepository (private val application: Application) {
                     Log.e("error", response.message().toString())
                 }
             }
-
             override fun onFailure(call: Call<JsonObject?>?, t: Throwable) {
                 Log.d("ListSize", " - > Error    " + t.message.toString());
             }
@@ -41,7 +40,7 @@ class ContactRepository (private val application: Application) {
         return mutableLiveData
     }
 
-    fun getDeleteLiveData() {
+    fun DeleteData() {
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<Contact> = apiService.deleteContact(Contact?.contact_id.toString())
         call.enqueue(object : retrofit2.Callback<Contact> {
@@ -56,18 +55,15 @@ class ContactRepository (private val application: Application) {
                 Log.d("this3", "error")
             }
         })
+
     }
 
-    fun CreateLiveData():MutableLiveData<ContactCreate> {
+    fun CreateData():MutableLiveData<ContactCreate> {
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<ContactCreate> = apiService.postContact(ContactCreate)
         call.enqueue(object : Callback<ContactCreate> {
             override fun onResponse(call: Call<ContactCreate>, response: Response<ContactCreate>) {
-                    if (response.isSuccessful) {
-                        Log.d("thisx", "error")
-                    } else {
-                        Log.d("thisxx", "error")
-                    }
+
                 }
 
             override fun onFailure(call: Call<ContactCreate>, t: Throwable) {
@@ -75,7 +71,7 @@ class ContactRepository (private val application: Application) {
             }
 
         })
-        return CreateLiveData()
+        return CreateData()
         }
 
 

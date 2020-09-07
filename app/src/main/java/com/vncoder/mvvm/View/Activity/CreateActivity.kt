@@ -1,6 +1,5 @@
 package com.vncoder.mvvm.View.Activity
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -8,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.Toast
 import com.vncoder.mvvm.R
+import com.vncoder.mvvm.Repository.ContactRepository
 import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.PostContact
@@ -104,7 +103,6 @@ class CreateActivity : AppCompatActivity() {
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
 
-                mainViewMode?.createUser
 
                 finish()
             }

@@ -13,8 +13,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = contactRepository.getMutableLiveData()
 
     val deleteUser: Unit
-        get() = contactRepository.getDeleteLiveData()
+        get() = contactRepository.DeleteData()
 
     val createUser: MutableLiveData<ContactCreate>
-        get() = contactRepository.CreateLiveData()
+        get() = contactRepository.CreateData()
 }

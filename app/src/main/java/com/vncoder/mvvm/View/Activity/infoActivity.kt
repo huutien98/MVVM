@@ -6,16 +6,25 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.vncoder.mvvm.R
+import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.retrofit2_employee.Model.Contact
+import com.vncoder.retrofit2_employee.Model.ContactCreate
+import com.vncoder.retrofit2_employee.Model.PostContact
+import com.vncoder.retrofit2_employee.Model.custom
 import kotlinx.android.synthetic.main.activity_info.*
 
 class infoActivity : AppCompatActivity() {
+    val mainViewModel : MainViewModel? = null
     private var REQUEST_SELECT_IMAGE = 200
     val KITKAT_VALUE = 1002
     var contact: Contact = Contact()
     var imageUri: String? = null
+    var ContactCreate: ContactCreate = ContactCreate()
+    var postContact: PostContact = PostContact()
+    var custom: custom = custom()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +41,31 @@ class infoActivity : AppCompatActivity() {
         imageUri = contact.custom_fields?.get(0)?.value.toString()
 
         detail_update.setOnClickListener {
+            detail_FirstName.setText(contact.FirstName.toString())
+            detail_LastName.setText(contact.LastName.toString())
+            detail_Email.setText(contact.Email)
+            detail_btn_avatar.setImageURI(Uri.parse(contact.custom_fields?.get(0)?.value.toString()))
+            detail_contact_id.setText(contact.contact_id.toString())
 
+            imageUri = contact.custom_fields?.get(0)?.value.toString()
+
+            detail_update.setOnClickListener {
+                llProgressBarDetail.visibility = View.VISIBLE
+
+                custom.string_Test_Field = imageUri.toString()
+
+                postContact.FirstName = detail_FirstName.text.toString()
+                postContact.LastName = detail_LastName.text.toString()
+                postContact.Email = detail_Email.text.toString()
+                postContact.custom = custom
+                ContactCreate.PostContact = postContact
+
+                mainViewModel?.createUser
+                finish()
+            }
         }
+
+
         detail_cancell.setOnClickListener {
             finish()
         }
