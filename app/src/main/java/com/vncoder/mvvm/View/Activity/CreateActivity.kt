@@ -5,14 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
-import com.vncoder.mvvm.Repository.ContactRepository
 import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.PostContact

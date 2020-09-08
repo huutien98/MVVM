@@ -1,11 +1,12 @@
 package com.vncoder.mvvm.View.Activity
 
 import android.content.Intent
-
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -32,13 +33,16 @@ class ListStaffActivity : AppCompatActivity() {
     private lateinit var adapterEmployee: AdapterEmployee
     private lateinit var recyclerView: RecyclerView
     private lateinit var swiperefresh: SwipeRefreshLayout
-
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recyclerView = findViewById(R.id.rv_cyclerview)
         swiperefresh = findViewById(R.id.swiperefresh)
+        progressBar = findViewById(R.id.progressBar)
+
         rv_cyclerview.isLongClickable=true
+
         initControls()
 
         btn_Create.setOnClickListener {
@@ -51,7 +55,7 @@ class ListStaffActivity : AppCompatActivity() {
     }
 
     private fun initControls() {
-        swiperefresh.isRefreshing = true
+        progressBar.visibility = View.VISIBLE
         adapterEmployee = AdapterEmployee(this, onItemClick)
         rv_cyclerview.setHasFixedSize(true)
         rv_cyclerview.layoutManager = LinearLayoutManager(this)
@@ -59,7 +63,7 @@ class ListStaffActivity : AppCompatActivity() {
         mainViewModel.getData().observe(this, Observer {
             adapterEmployee.setList(it as ArrayList<Contact>)
         })
-        swiperefresh.isRefreshing = false
+        progressBar.visibility = View.GONE
     }
 
     private val onItemClick: (Contact)->Unit={

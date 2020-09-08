@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.vncoder.mvvm.R
 import com.vncoder.retrofit2_employee.Model.Contact
-import kotlin.collections.ArrayList
 
 class AdapterEmployee(
     private val context: Context,
@@ -50,7 +49,7 @@ class AdapterEmployee(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-       holder.onBind(exampleList!![position])
+       holder.onBind(exampleList[position])
     }
 
     fun setList(notes:ArrayList<Contact>){
