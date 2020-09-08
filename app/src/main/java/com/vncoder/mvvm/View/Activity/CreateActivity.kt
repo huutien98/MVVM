@@ -1,13 +1,16 @@
 package com.vncoder.mvvm.View.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.Repository.ContactRepository
 import com.vncoder.mvvm.ViewModel.MainViewModel
@@ -19,7 +22,13 @@ import java.util.regex.Pattern
 
 
 class CreateActivity : AppCompatActivity() {
-    var mainViewMode : MainViewModel? = null
+    private val mainViewModel : MainViewModel by lazy {
+        ViewModelProvider(
+            this,
+            MainViewModel.NoteViewModelFactory(this.application)
+        )[MainViewModel::class.java]
+    }
+
     val KITKAT_VALUE = 1002
     private var REQUEST_SELECT_IMAGE =1
     private var uriImage :String? = null
@@ -83,13 +92,13 @@ class CreateActivity : AppCompatActivity() {
 
         btn_create.setOnClickListener {
             if (edt_FirstName.text.toString().trim().isEmpty()) {
-                edt_FirstName.setError("FirstName not null")
+                edt_FirstName.error = "FirstName not null"
             } else if (edt_LastName.text.toString().trim().isEmpty()) {
-                edt_LastName.setError("LastName not null")
+                edt_LastName.error = "LastName not null"
             } else if (edt_Email.text.toString().trim().isEmpty()
                 || !EMAIL_ADDRESS.matcher(edt_Email.text.toString()).matches()
             ) {
-                edt_Email.setError("Email invalid")
+                edt_Email.error = "Email invalid"
             } else {
 
                 var custom: custom = custom()
@@ -103,7 +112,7 @@ class CreateActivity : AppCompatActivity() {
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
 
-
+                mainViewModel.insertData(ContactCreate)
                 finish()
             }
         }
@@ -112,6 +121,17 @@ class CreateActivity : AppCompatActivity() {
             finish()
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == KITKAT_VALUE ) {
+            if (resultCode == Activity.RESULT_OK) {
+                // do something here
+                uriImage =data?.data.toString()
+                btn_avatar.setImageURI(Uri.parse(uriImage))
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(

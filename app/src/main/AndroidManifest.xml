@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".View.Activity.CreateActivity"></activity>
         <activity android:name=".View.Activity.infoActivity" />
-        <activity android:name=".View.Activity.MainActivity">
+        <activity android:name=".View.Activity.ListStaffActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

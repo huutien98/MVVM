@@ -2,6 +2,7 @@ package com.vncoder.mvvm.Repository
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vncoder.mvvm.Network.RestApiService
 import com.vncoder.mvvm.Network.RetrofitInstance
@@ -13,11 +14,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class ContactRepository (private val application: Application) {
-    private var ContactCreate: ContactCreate? = null
-    private var Contact: Contact? = null
-    private var listContact: ArrayList<Contact> = ArrayList()
+class ContactRepository (application: Application) {
 
+    private var listContact: ArrayList<Contact> = ArrayList()
     private val mutableLiveData: MutableLiveData<List<Contact>> = MutableLiveData<List<Contact>>()
 
     fun getMutableLiveData(): MutableLiveData<List<Contact>> {
@@ -40,9 +39,9 @@ class ContactRepository (private val application: Application) {
         return mutableLiveData
     }
 
-    fun DeleteData() {
+    fun DeleteData(contactID : String) {
         val apiService: RestApiService = RetrofitInstance.instance
-        val call: Call<Contact> = apiService.deleteContact(Contact?.contact_id.toString())
+        val call: Call<Contact> = apiService.deleteContact(contactID)
         call.enqueue(object : retrofit2.Callback<Contact> {
             override fun onResponse(call: Call<Contact>, response: Response<Contact>) {
                 if (response.isSuccessful) {
@@ -58,20 +57,17 @@ class ContactRepository (private val application: Application) {
 
     }
 
-    fun CreateData():MutableLiveData<ContactCreate> {
+    fun CreateData(contactCreate: ContactCreate) {
         val apiService: RestApiService = RetrofitInstance.instance
-        val call: Call<ContactCreate> = apiService.postContact(ContactCreate)
+        val call: Call<ContactCreate> = apiService.postContact(contactCreate)
         call.enqueue(object : Callback<ContactCreate> {
             override fun onResponse(call: Call<ContactCreate>, response: Response<ContactCreate>) {
-
                 }
-
             override fun onFailure(call: Call<ContactCreate>, t: Throwable) {
-                Log.d("thisxxx", "error")
+                Log.d("thisxxx", t.message.toString())
             }
-
         })
-        return CreateData()
+
         }
 
 
