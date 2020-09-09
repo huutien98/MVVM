@@ -14,7 +14,8 @@ import com.vncoder.retrofit2_employee.Model.Contact
 
 class AdapterEmployee(
     private val context: Context,
-    private val onClick:(Contact) ->Unit
+    private val onClick:(Contact) ->Unit,
+    private val onLongClick:(Contact) ->Unit
 ) : RecyclerView.Adapter<AdapterEmployee.ViewHolder>() {
 
     var exampleList: List<Contact> = listOf()
@@ -33,8 +34,11 @@ class AdapterEmployee(
             FirstName.text = contact.FirstName.toString()
             LastName.text = contact.LastName.toString()
             img_avatar.setImageURI(Uri.parse(exampleList[adapterPosition].custom_fields?.get(0)?.value))
-
             layout_item.setOnClickListener {onClick(contact) }
+            layout_item.setOnLongClickListener(View.OnLongClickListener {
+                onLongClick(contact)
+                true
+            })
         }
     }
 

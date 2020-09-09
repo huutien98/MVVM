@@ -99,7 +99,6 @@ class CreateActivity : AppCompatActivity() {
             ) {
                 edt_Email.error = "Email invalid"
             } else {
-
                 var custom: custom = custom()
                 custom.string_Test_Field = uriImage.toString()
 

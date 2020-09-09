@@ -5,10 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.ViewModel.MainViewModel
@@ -26,13 +25,10 @@ class infoActivity : AppCompatActivity() {
         )[MainViewModel::class.java]
     }
 
-
     private var REQUEST_SELECT_IMAGE = 200
     val KITKAT_VALUE = 1002
     var contact: Contact = Contact()
     var imageUri: String? = null
-    var ContactCreate: ContactCreate = ContactCreate()
-    var postContact: PostContact = PostContact()
     var custom: custom = custom()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,21 +59,22 @@ class infoActivity : AppCompatActivity() {
         detail_btn_avatar.setImageURI(Uri.parse(contact.custom_fields?.get(0)?.value.toString()))
         detail_contact_id.text = contact.contact_id.toString()
 
-
-
             detail_update.setOnClickListener {
+
+                var ContactCreate: ContactCreate = ContactCreate()
+                var postContact: PostContact = PostContact()
+
                 custom.string_Test_Field = imageUri.toString()
                 postContact.FirstName = detail_FirstName.text.toString()
                 postContact.LastName = detail_LastName.text.toString()
                 postContact.Email = detail_Email.text.toString()
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
-                mainViewModel?.insertData(ContactCreate)
+
+                mainViewModel.insertData(ContactCreate)
+
                 finish()
             }
-
-
-
         detail_cancell.setOnClickListener {
             finish()
         }
@@ -93,7 +90,6 @@ class infoActivity : AppCompatActivity() {
                 detail_btn_avatar.setImageURI(Uri.parse(imageUri))
             }
         }
-
     }
 
     override fun onRequestPermissionsResult(

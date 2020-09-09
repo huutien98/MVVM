@@ -2,7 +2,6 @@ package com.vncoder.mvvm.Repository
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vncoder.mvvm.Network.RestApiService
 import com.vncoder.mvvm.Network.RetrofitInstance
@@ -24,7 +23,7 @@ class ContactRepository (application: Application) {
         val call: Call<JsonObject> = apiService.getdata()
         call.enqueue(object : retrofit2.Callback<JsonObject?> {
             override fun onResponse(call: Call<JsonObject?>?, response: Response<JsonObject?>) {
-                if (response!!.isSuccessful) {
+                if (response.isSuccessful) {
                     val JsonObject: JsonObject = response.body()!!
                     listContact = JsonObject.contacts as ArrayList<Contact>
                     mutableLiveData.setValue(listContact)
@@ -39,7 +38,7 @@ class ContactRepository (application: Application) {
         return mutableLiveData
     }
 
-    fun DeleteData(contactID : String) {
+    fun DeleteData(contactID : String):MutableLiveData<List<Contact>> {
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<Contact> = apiService.deleteContact(contactID)
         call.enqueue(object : retrofit2.Callback<Contact> {
@@ -54,10 +53,10 @@ class ContactRepository (application: Application) {
                 Log.d("this3", "error")
             }
         })
-
+        return mutableLiveData
     }
 
-    fun CreateData(contactCreate: ContactCreate) {
+    fun CreateData(contactCreate: ContactCreate): MutableLiveData<List<Contact>> {
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<ContactCreate> = apiService.postContact(contactCreate)
         call.enqueue(object : Callback<ContactCreate> {
@@ -67,8 +66,8 @@ class ContactRepository (application: Application) {
                 Log.d("thisxxx", t.message.toString())
             }
         })
-
-        }
+        return mutableLiveData
+    }
 
 
 

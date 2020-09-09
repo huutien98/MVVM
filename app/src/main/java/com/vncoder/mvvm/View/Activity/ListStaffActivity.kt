@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -33,38 +32,47 @@ class ListStaffActivity : AppCompatActivity() {
     private lateinit var adapterEmployee: AdapterEmployee
     private lateinit var recyclerView: RecyclerView
     private lateinit var swiperefresh: SwipeRefreshLayout
-    private lateinit var progressBar: ProgressBar
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recyclerView = findViewById(R.id.rv_cyclerview)
         swiperefresh = findViewById(R.id.swiperefresh)
-        progressBar = findViewById(R.id.progressBar)
 
-        rv_cyclerview.isLongClickable=true
 
-        initControls()
+
+
 
         btn_Create.setOnClickListener {
             val intent = Intent(this, CreateActivity::class.java)
             startActivity(intent)
         }
 
-        swiperefresh.setOnRefreshListener { initControls() }
-
+        refreshData()
     }
 
     private fun initControls() {
-        progressBar.visibility = View.VISIBLE
-        adapterEmployee = AdapterEmployee(this, onItemClick)
+
+        rv_cyclerview.isLongClickable = true
+        adapterEmployee = AdapterEmployee(this, onItemClick,onItemLongClick)
         rv_cyclerview.setHasFixedSize(true)
         rv_cyclerview.layoutManager = LinearLayoutManager(this)
         rv_cyclerview.adapter = adapterEmployee
         mainViewModel.getData().observe(this, Observer {
             adapterEmployee.setList(it as ArrayList<Contact>)
+            adapterEmployee.notifyDataSetChanged()
         })
-        progressBar.visibility = View.GONE
+
     }
+
+    private fun refreshData(){
+        swiperefresh.setOnRefreshListener {
+            initControls()
+            swiperefresh.isRefreshing = false
+        }
+    }
+
 
     private val onItemClick: (Contact)->Unit={
         val replyintent = Intent(this@ListStaffActivity, infoActivity::class.java)
@@ -74,7 +82,22 @@ class ListStaffActivity : AppCompatActivity() {
             startActivityForResult(replyintent, ActivityRequestCode2)
     }
 
-
+    private val onItemLongClick: (Contact)->Unit={
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("notification")
+        builder.setMessage("Do you want delete item ?")
+        builder.setCancelable(false)
+        builder.setPositiveButton("Yes")
+        { _, i ->
+            mainViewModel.delete(it.contact_id.toString())
+        }
+        builder.setNegativeButton("No")
+        { dialogInterface, i ->
+            dialogInterface.dismiss()
+        }
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
@@ -86,7 +109,7 @@ class ListStaffActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 var listResult = if (query!!.isEmpty()) {
-                    listOf<Contact>()
+                    initControls()
                 } else {
                     adapterEmployee.exampleList.filter {
                         it.Name?.toLowerCase()!!.contains(query.toString())
@@ -99,7 +122,7 @@ class ListStaffActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 var listResult = if (newText!!.isEmpty()) {
-                    listOf<Contact>()
+                     initControls()
                 } else {
                     adapterEmployee.exampleList.filter {
                         it.FirstName?.toLowerCase()!!.contains(
@@ -107,9 +130,7 @@ class ListStaffActivity : AppCompatActivity() {
                         )
                     }
                 }
-                mainViewModel?.getData()?.observe(this@ListStaffActivity, Observer {
-                    adapterEmployee.setList(it as ArrayList<Contact>)
-                })
+//                adapterEmployee.exampleList = listResult as ArrayList<Contact>
                 adapterEmployee.notifyDataSetChanged()
                 return false
             }
@@ -117,22 +138,27 @@ class ListStaffActivity : AppCompatActivity() {
         return true
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        val id = item.itemId
-//        return when (id) {
-//            R.id.action_sort -> {
-//                adapterEmployee?.exampleList.sortBy  { it.Email }
-//                adapterEmployee.notifyDataSetChanged()
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        return when (id) {
+            R.id.action_sort -> {
+                mainViewModel.getData().observe(this,{ it ->
+                    it.sortedBy { it.Email }
+                    adapterEmployee.setList(it as ArrayList<Contact>)
+                })
+                adapterEmployee.notifyDataSetChanged()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onResume() {
+        llProgressBarDetail.visibility = View.VISIBLE
         initControls()
         super.onResume()
+        llProgressBarDetail.visibility = View.GONE
     }
 
 }
