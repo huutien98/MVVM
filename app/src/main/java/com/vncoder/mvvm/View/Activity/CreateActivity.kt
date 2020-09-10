@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
+import com.vncoder.mvvm.ViewModel.CreateViewModel
 import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.PostContact
@@ -21,11 +22,11 @@ import java.util.regex.Pattern
 
 
 class CreateActivity : AppCompatActivity() {
-    private val mainViewModel : MainViewModel by lazy {
+    private val createViewModel : CreateViewModel by lazy {
         ViewModelProvider(
             this,
-            MainViewModel.NoteViewModelFactory(this.application)
-        )[MainViewModel::class.java]
+            CreateViewModel.CreateViewModelFactory(this.application)
+        )[CreateViewModel::class.java]
     }
 
     val KITKAT_VALUE = 1002
@@ -110,7 +111,9 @@ class CreateActivity : AppCompatActivity() {
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
 
-                mainViewModel.insertData(ContactCreate)
+                createViewModel.insertData(ContactCreate)
+
+
                 finish()
             }
         }

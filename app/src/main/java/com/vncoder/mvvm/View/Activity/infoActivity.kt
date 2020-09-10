@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
+import com.vncoder.mvvm.ViewModel.InfoViewModel
 import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.retrofit2_employee.Model.Contact
 import com.vncoder.retrofit2_employee.Model.ContactCreate
@@ -18,11 +19,11 @@ import com.vncoder.retrofit2_employee.Model.custom
 import kotlinx.android.synthetic.main.activity_info.*
 
 class infoActivity : AppCompatActivity() {
-    private val mainViewModel : MainViewModel by lazy {
+    private val infoViewModel : InfoViewModel by lazy {
         ViewModelProvider(
             this,
-            MainViewModel.NoteViewModelFactory(this.application)
-        )[MainViewModel::class.java]
+            InfoViewModel.InfoViewModelFactory(this.application)
+        )[InfoViewModel::class.java]
     }
 
     private var REQUEST_SELECT_IMAGE = 200
@@ -71,7 +72,7 @@ class infoActivity : AppCompatActivity() {
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
 
-                mainViewModel.insertData(ContactCreate)
+                infoViewModel.insertData(ContactCreate)
 
                 finish()
             }

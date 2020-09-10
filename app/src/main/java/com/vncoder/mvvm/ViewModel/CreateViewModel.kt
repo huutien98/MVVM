@@ -8,19 +8,16 @@ import com.vncoder.mvvm.Repository.ContactRepository
 import com.vncoder.retrofit2_employee.Model.Contact
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 
-
-class MainViewModel(application: Application) : ViewModel(){
+class CreateViewModel(application: Application):ViewModel() {
     private val contactRepository: ContactRepository = ContactRepository(application)
 
-    fun getData(): MutableLiveData<List<Contact>> = contactRepository.getMutableLiveData()
+    fun insertData(contactCreate: ContactCreate): MutableLiveData<List<Contact>> = contactRepository.CreateData(contactCreate)
 
-    fun delete(ContactID :String): MutableLiveData<List<Contact>> =  contactRepository.DeleteData(ContactID)
-
-    class NoteViewModelFactory(private val application: Application) :ViewModelProvider.Factory{
+    class CreateViewModelFactory(private val application: Application) : ViewModelProvider.Factory{
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(MainViewModel::class.java)){
-                return MainViewModel(application) as T
+            if (modelClass.isAssignableFrom(CreateViewModel::class.java)){
+                return CreateViewModel(application) as T
             }
             throw IllegalAccessException("Unable constructor ViewModel")
         }

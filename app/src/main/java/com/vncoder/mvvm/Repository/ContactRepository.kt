@@ -26,7 +26,8 @@ class ContactRepository (application: Application) {
                 if (response.isSuccessful) {
                     val JsonObject: JsonObject = response.body()!!
                     listContact = JsonObject.contacts as ArrayList<Contact>
-                    mutableLiveData.setValue(listContact)
+//                    mutableLiveData.setValue(listContact)
+                    mutableLiveData.value = listContact
                 } else {
                     Log.e("error", response.message().toString())
                 }
@@ -44,6 +45,7 @@ class ContactRepository (application: Application) {
         call.enqueue(object : retrofit2.Callback<Contact> {
             override fun onResponse(call: Call<Contact>, response: Response<Contact>) {
                 if (response.isSuccessful) {
+                    getMutableLiveData()
                     Log.d("this1", "error")
                 } else {
                     Log.d("this2", "error")
@@ -61,6 +63,7 @@ class ContactRepository (application: Application) {
         val call: Call<ContactCreate> = apiService.postContact(contactCreate)
         call.enqueue(object : Callback<ContactCreate> {
             override fun onResponse(call: Call<ContactCreate>, response: Response<ContactCreate>) {
+                getMutableLiveData()
                 }
             override fun onFailure(call: Call<ContactCreate>, t: Throwable) {
                 Log.d("thisxxx", t.message.toString())
