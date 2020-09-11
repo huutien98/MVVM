@@ -6,13 +6,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.ViewModel.InfoViewModel
-import com.vncoder.mvvm.ViewModel.MainViewModel
-import com.vncoder.retrofit2_employee.Model.Contact
+import com.vncoder.mvvm.model.Contact
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.PostContact
 import com.vncoder.retrofit2_employee.Model.custom
@@ -31,6 +31,8 @@ class infoActivity : AppCompatActivity() {
     var contact: Contact = Contact()
     var imageUri: String? = null
     var custom: custom = custom()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +63,7 @@ class infoActivity : AppCompatActivity() {
         detail_contact_id.text = contact.contact_id.toString()
 
             detail_update.setOnClickListener {
+                llProgressBarDetail.visibility = View.VISIBLE
 
                 var ContactCreate: ContactCreate = ContactCreate()
                 var postContact: PostContact = PostContact()
@@ -72,14 +75,16 @@ class infoActivity : AppCompatActivity() {
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
 
-                infoViewModel.insertData(ContactCreate)
+                infoViewModel.CreateData(ContactCreate,this)
 
-                finish()
+
+                setResult(Activity.RESULT_OK)
+
+                llProgressBarDetail.visibility = View.GONE
             }
         detail_cancell.setOnClickListener {
             finish()
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -113,4 +118,6 @@ class infoActivity : AppCompatActivity() {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
+
 }

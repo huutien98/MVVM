@@ -1,5 +1,6 @@
-package com.vncoder.mvvm.Network
+package com.vncoder.mvvm.network
 
+import com.vncoder.mvvm.model.Contact
 import com.vncoder.retrofit2_employee.Model.*
 import retrofit2.Call
 import retrofit2.http.*

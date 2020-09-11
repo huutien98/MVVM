@@ -1,7 +1,8 @@
-package com.vncoder.retrofit2_employee.Model
+package com.vncoder.mvvm.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.vncoder.retrofit2_employee.Model.custom_fields
 import java.io.Serializable
 
 class Contact : Serializable {
@@ -40,4 +41,6 @@ class Contact : Serializable {
     @SerializedName("contact_id")
     @Expose
     var contact_id: String? = null
+
+
 }

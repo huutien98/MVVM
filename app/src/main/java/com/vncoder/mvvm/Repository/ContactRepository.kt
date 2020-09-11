@@ -3,9 +3,9 @@ package com.vncoder.mvvm.Repository
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.vncoder.mvvm.Network.RestApiService
-import com.vncoder.mvvm.Network.RetrofitInstance
-import com.vncoder.retrofit2_employee.Model.Contact
+import com.vncoder.mvvm.network.RestApiService
+import com.vncoder.mvvm.network.RetrofitInstance
+import com.vncoder.mvvm.model.Contact
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.JsonObject
 import retrofit2.Call
@@ -14,7 +14,6 @@ import retrofit2.Response
 
 
 class ContactRepository (application: Application) {
-
     private var listContact: ArrayList<Contact> = ArrayList()
     private val mutableLiveData: MutableLiveData<List<Contact>> = MutableLiveData<List<Contact>>()
 
@@ -39,7 +38,7 @@ class ContactRepository (application: Application) {
         return mutableLiveData
     }
 
-    fun DeleteData(contactID : String):MutableLiveData<List<Contact>> {
+    fun DeleteData(contactID : String)  {
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<Contact> = apiService.deleteContact(contactID)
         call.enqueue(object : retrofit2.Callback<Contact> {
@@ -55,21 +54,22 @@ class ContactRepository (application: Application) {
                 Log.d("this3", "error")
             }
         })
-        return mutableLiveData
     }
 
-    fun CreateData(contactCreate: ContactCreate): MutableLiveData<List<Contact>> {
+    fun CreateData(contactCreate: ContactCreate )  {
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<ContactCreate> = apiService.postContact(contactCreate)
         call.enqueue(object : Callback<ContactCreate> {
             override fun onResponse(call: Call<ContactCreate>, response: Response<ContactCreate>) {
-                getMutableLiveData()
+                if (response.isSuccessful){
+
+                }
                 }
             override fun onFailure(call: Call<ContactCreate>, t: Throwable) {
                 Log.d("thisxxx", t.message.toString())
             }
         })
-        return mutableLiveData
+
     }
 
 

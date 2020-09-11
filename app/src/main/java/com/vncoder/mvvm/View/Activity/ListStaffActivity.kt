@@ -1,5 +1,6 @@
 package com.vncoder.mvvm.View.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -15,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.ViewModel.MainViewModel
+import com.vncoder.mvvm.model.Contact
 import com.vncoder.retrofit2_employee.Adapter.AdapterEmployee
-import com.vncoder.retrofit2_employee.Model.Contact
-import kotlinx.android.synthetic.main.activity_main.*
+ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class ListStaffActivity : AppCompatActivity() {
@@ -40,10 +41,6 @@ class ListStaffActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.rv_cyclerview)
         swiperefresh = findViewById(R.id.swiperefresh)
 
-
-
-
-
         btn_Create.setOnClickListener {
             val intent = Intent(this, CreateActivity::class.java)
             startActivity(intent)
@@ -53,13 +50,12 @@ class ListStaffActivity : AppCompatActivity() {
     }
 
     private fun initControls() {
-
         rv_cyclerview.isLongClickable = true
         adapterEmployee = AdapterEmployee(this, onItemClick,onItemLongClick)
         rv_cyclerview.setHasFixedSize(true)
         rv_cyclerview.layoutManager = LinearLayoutManager(this)
         rv_cyclerview.adapter = adapterEmployee
-        mainViewModel.getData().observe(this, Observer {
+        mainViewModel.getMutableLiveData().observe(this, Observer {
             adapterEmployee.setList(it as ArrayList<Contact>)
             adapterEmployee.notifyDataSetChanged()
         })
@@ -89,7 +85,7 @@ class ListStaffActivity : AppCompatActivity() {
         builder.setCancelable(false)
         builder.setPositiveButton("Yes")
         { _, i ->
-            mainViewModel.delete(it.contact_id.toString())
+            mainViewModel.DeleteData(it.contact_id.toString())
         }
         builder.setNegativeButton("No")
         { dialogInterface, i ->
@@ -142,7 +138,7 @@ class ListStaffActivity : AppCompatActivity() {
         val id = item.itemId
         return when (id) {
             R.id.action_sort -> {
-                mainViewModel.getData().observe(this,{ it ->
+                mainViewModel.getMutableLiveData().observe(this,{ it ->
                     it.sortedBy { it.Email }
                     adapterEmployee.setList(it as ArrayList<Contact>)
                 })
@@ -155,11 +151,16 @@ class ListStaffActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        llProgressBarDetail.visibility = View.VISIBLE
-        initControls()
         super.onResume()
-        llProgressBarDetail.visibility = View.GONE
+        initControls()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK){
+            initControls()
+
+        }
+    }
 }
 

@@ -10,11 +10,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.ViewModel.CreateViewModel
 import com.vncoder.mvvm.ViewModel.MainViewModel
-import com.vncoder.retrofit2_employee.Model.ContactCreate
+ import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.PostContact
 import com.vncoder.retrofit2_employee.Model.custom
 import kotlinx.android.synthetic.main.activity_create.*
@@ -42,6 +43,8 @@ class CreateActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
+
+
 
         btn_avatar.setOnClickListener {
             val intent: Intent
@@ -111,10 +114,8 @@ class CreateActivity : AppCompatActivity() {
                 postContact.custom = custom
                 ContactCreate.PostContact = postContact
 
-                createViewModel.insertData(ContactCreate)
+                createViewModel.CreateData(ContactCreate,this)
 
-
-                finish()
             }
         }
 

@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.vncoder.mvvm.R
-import com.vncoder.retrofit2_employee.Model.Contact
+import com.vncoder.mvvm.model.Contact
 
 class AdapterEmployee(
     private val context: Context,

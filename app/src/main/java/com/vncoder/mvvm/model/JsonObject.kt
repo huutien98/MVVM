@@ -2,6 +2,7 @@ package com.vncoder.retrofit2_employee.Model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.vncoder.mvvm.model.Contact
 import java.io.Serializable
 
 class JsonObject :Serializable{

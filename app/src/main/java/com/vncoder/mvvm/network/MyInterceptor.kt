@@ -1,4 +1,4 @@
-package com.vncoder.mvvm.Network
+package com.vncoder.mvvm.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
