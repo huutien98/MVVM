@@ -1,11 +1,10 @@
-package com.vncoder.mvvm.View.Activity
+package com.vncoder.mvvm.view.activity
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -21,7 +20,7 @@ import com.vncoder.retrofit2_employee.Adapter.AdapterEmployee
  import kotlinx.android.synthetic.main.activity_main.*
 
 
-class ListStaffActivity : AppCompatActivity() {
+class listStaffActivity : AppCompatActivity() {
     private val mainViewModel : MainViewModel by lazy {
         ViewModelProvider(
             this,
@@ -42,7 +41,7 @@ class ListStaffActivity : AppCompatActivity() {
         swiperefresh = findViewById(R.id.swiperefresh)
 
         btn_Create.setOnClickListener {
-            val intent = Intent(this, CreateActivity::class.java)
+            val intent = Intent(this, createActivity::class.java)
             startActivity(intent)
         }
 
@@ -55,7 +54,7 @@ class ListStaffActivity : AppCompatActivity() {
         rv_cyclerview.setHasFixedSize(true)
         rv_cyclerview.layoutManager = LinearLayoutManager(this)
         rv_cyclerview.adapter = adapterEmployee
-        mainViewModel.getMutableLiveData().observe(this, Observer {
+        mainViewModel.getMutableLiveData(this).observe(this, Observer {
             adapterEmployee.setList(it as ArrayList<Contact>)
             adapterEmployee.notifyDataSetChanged()
         })
@@ -71,7 +70,7 @@ class ListStaffActivity : AppCompatActivity() {
 
 
     private val onItemClick: (Contact)->Unit={
-        val replyintent = Intent(this@ListStaffActivity, infoActivity::class.java)
+        val replyintent = Intent(this@listStaffActivity, infoActivity::class.java)
             val bundle = Bundle()
             bundle.putSerializable("detailEmployee", it)
             replyintent.putExtras(bundle)
@@ -138,7 +137,7 @@ class ListStaffActivity : AppCompatActivity() {
         val id = item.itemId
         return when (id) {
             R.id.action_sort -> {
-                mainViewModel.getMutableLiveData().observe(this,{ it ->
+                mainViewModel.getMutableLiveData(this).observe(this,{ it ->
                     it.sortedBy { it.Email }
                     adapterEmployee.setList(it as ArrayList<Contact>)
                 })
@@ -153,13 +152,14 @@ class ListStaffActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         initControls()
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             initControls()
-
         }
     }
 }

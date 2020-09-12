@@ -1,4 +1,4 @@
-package com.vncoder.mvvm.View.Activity
+package com.vncoder.mvvm.view.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -33,7 +33,6 @@ class infoActivity : AppCompatActivity() {
     var custom: custom = custom()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
@@ -63,8 +62,7 @@ class infoActivity : AppCompatActivity() {
         detail_contact_id.text = contact.contact_id.toString()
 
             detail_update.setOnClickListener {
-                llProgressBarDetail.visibility = View.VISIBLE
-
+                llProgressBarInfo.visibility = View.VISIBLE
                 var ContactCreate: ContactCreate = ContactCreate()
                 var postContact: PostContact = PostContact()
 
@@ -76,12 +74,10 @@ class infoActivity : AppCompatActivity() {
                 ContactCreate.PostContact = postContact
 
                 infoViewModel.CreateData(ContactCreate,this)
-
-
                 setResult(Activity.RESULT_OK)
-
-                llProgressBarDetail.visibility = View.GONE
+                llProgressBarInfo.visibility = View.GONE
             }
+
         detail_cancell.setOnClickListener {
             finish()
         }

@@ -1,4 +1,4 @@
-package com.vncoder.mvvm.View.Activity
+package com.vncoder.mvvm.view.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -10,19 +10,17 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.ViewModel.CreateViewModel
-import com.vncoder.mvvm.ViewModel.MainViewModel
- import com.vncoder.retrofit2_employee.Model.ContactCreate
+import com.vncoder.retrofit2_employee.Model.ContactCreate
 import com.vncoder.retrofit2_employee.Model.PostContact
 import com.vncoder.retrofit2_employee.Model.custom
 import kotlinx.android.synthetic.main.activity_create.*
 import java.util.regex.Pattern
 
 
-class CreateActivity : AppCompatActivity() {
+class createActivity : AppCompatActivity() {
     private val createViewModel : CreateViewModel by lazy {
         ViewModelProvider(
             this,
@@ -94,6 +92,7 @@ class CreateActivity : AppCompatActivity() {
         })
 
         btn_create.setOnClickListener {
+
             if (edt_FirstName.text.toString().trim().isEmpty()) {
                 edt_FirstName.error = "FirstName not null"
             } else if (edt_LastName.text.toString().trim().isEmpty()) {
