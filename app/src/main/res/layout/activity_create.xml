@@ -1,120 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:orientation="vertical"
-        tools:context=".view.activity.createActivity">
+    android:layout_margin="20dp"
+    android:orientation="vertical"
+    tools:context=".view.activity.CreateActivity">
 
-        <include
-            android:id="@+id/llProgressBarCreate"
-            android:visibility="invisible"
-            layout="@layout/processbar" />
+    <include
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/llProgressBarCreate"
+        layout="@layout/processbar"
+        android:visibility="visible" />
 
-        <ImageButton
-            android:background="@drawable/drawable_rounded_corner_background"
-            android:layout_marginTop="50dp"
-            android:scaleType="fitXY"
-            android:id="@+id/btn_avatar"
-            app:layout_constraintBottom_toTopOf="@+id/tf_FirstName"
+
+    <androidx.cardview.widget.CardView
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/tf_FirstName"
+        app:cardCornerRadius="100dp"
+        android:id="@+id/cv_Image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="200dp"
+        android:layout_height="200dp">
+            <ImageButton
+                android:src="@drawable/ic_baseline_add_photo_alternate_24"
+                android:id="@+id/btn_avatar"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@drawable/drawable_rounded_corner_background"
+                android:scaleType="fitXY"
+                />
+
+    </androidx.cardview.widget.CardView>
+
+<!--    <ImageButton-->
+<!--        android:src="@drawable/ic_baseline_add_photo_alternate_24"-->
+<!--        android:id="@+id/btn_avatar"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:background="@drawable/drawable_rounded_corner_background"-->
+<!--        android:scaleType="fitXY"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/tf_FirstName"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tf_LastName"
+        android:id="@+id/tf_FirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/cv_Image">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_FirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="FirstName"
+            app:layout_constraintBottom_toTopOf="@+id/edt_LastName"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="200dp"
-            android:layout_height="200dp" />
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/tf_LastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tf_Email"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tf_FirstName">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="30dp"
-            app:layout_constraintTop_toBottomOf="@+id/btn_avatar"
-            android:id="@+id/tf_FirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_FirstName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="FirstName"
-                app:layout_constraintBottom_toTopOf="@+id/edt_LastName"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            app:layout_constraintTop_toBottomOf="@+id/tf_FirstName"
-            android:id="@+id/tf_LastName"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_LastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/tf_Email"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_LastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:hint="LastName"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tf_FirstName" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:textColorHint="@color/babyblue"
-            app:layout_constraintTop_toBottomOf="@+id/tf_LastName"
-            android:id="@+id/tf_Email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="LastName"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tf_FirstName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_Email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edt_LastName" />
-        </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="30dp"
+        android:id="@+id/tf_Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/babyblue"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tf_LastName">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+             />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <Button
         android:id="@+id/btn_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginLeft="76dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="192dp"
         android:text="Create"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_cancel"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btn_cancelCreate"
         app:layout_constraintTop_toBottomOf="@+id/tf_Email"
-        app:layout_constraintVertical_bias="0.509" />
+          />
 
     <Button
-        android:id="@+id/btn_cancel"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/btn_cancelCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="192dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintLeft_toRightOf="@+id/btn_create"
-        app:layout_constraintStart_toEndOf="@+id/btn_create"
         app:layout_constraintTop_toBottomOf="@id/tf_Email"
-        app:layout_constraintVertical_bias="0.509" />
+         />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

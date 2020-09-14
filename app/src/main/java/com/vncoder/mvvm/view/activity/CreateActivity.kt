@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -20,14 +21,13 @@ import kotlinx.android.synthetic.main.activity_create.*
 import java.util.regex.Pattern
 
 
-class createActivity : AppCompatActivity() {
+class CreateActivity : AppCompatActivity() {
     private val createViewModel : CreateViewModel by lazy {
         ViewModelProvider(
             this,
             CreateViewModel.CreateViewModelFactory(this.application)
         )[CreateViewModel::class.java]
     }
-
     val KITKAT_VALUE = 1002
     private var REQUEST_SELECT_IMAGE =1
     private var uriImage :String? = null
@@ -42,7 +42,10 @@ class createActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
 
-
+        llProgressBarCreate.visibility =View.GONE
+        btn_cancelCreate.setOnClickListener {
+            finish()
+        }
 
         btn_avatar.setOnClickListener {
             val intent: Intent
@@ -91,6 +94,9 @@ class createActivity : AppCompatActivity() {
             }
         })
 
+
+
+
         btn_create.setOnClickListener {
 
             if (edt_FirstName.text.toString().trim().isEmpty()) {
@@ -102,25 +108,25 @@ class createActivity : AppCompatActivity() {
             ) {
                 edt_Email.error = "Email invalid"
             } else {
-                var custom: custom = custom()
-                custom.string_Test_Field = uriImage.toString()
+
+                var Custom: custom = custom()
+                Custom.string_Test_Field = uriImage.toString()
 
                 var ContactCreate: ContactCreate = ContactCreate()
                 val postContact: PostContact = PostContact()
                 postContact.FirstName = edt_FirstName.text.toString().trim()
                 postContact.LastName = edt_LastName.text.toString().trim()
                 postContact.Email = edt_Email.text.toString().trim()
-                postContact.custom = custom
+                postContact.custom = Custom
                 ContactCreate.PostContact = postContact
-
-                createViewModel.CreateData(ContactCreate,this)
+                createViewModel.createData(ContactCreate,this)
 
             }
+
         }
 
-        btn_cancel.setOnClickListener {
-            finish()
-        }
+
+
 
     }
 

@@ -62,6 +62,7 @@ dependencies {
     //design
     //noinspection GradleCompatible
     implementation 'com.android.support:design:29.0.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 
 

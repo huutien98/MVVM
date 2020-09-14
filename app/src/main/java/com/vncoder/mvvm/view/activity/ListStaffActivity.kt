@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -16,20 +18,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vncoder.mvvm.R
 import com.vncoder.mvvm.ViewModel.MainViewModel
 import com.vncoder.mvvm.model.Contact
-import com.vncoder.retrofit2_employee.Adapter.AdapterEmployee
+import com.vncoder.retrofit2_employee.Adapter.AdapterContact
  import kotlinx.android.synthetic.main.activity_main.*
 
 
-class listStaffActivity : AppCompatActivity() {
+class ListStaffActivity : AppCompatActivity() {
     private val mainViewModel : MainViewModel by lazy {
         ViewModelProvider(
             this,
-            MainViewModel.NoteViewModelFactory(this.application)
+            MainViewModel.MainViewModelFactory(this.application)
         )[MainViewModel::class.java]
     }
 
     private val ActivityRequestCode2 = 2
-    private lateinit var adapterEmployee: AdapterEmployee
+    private lateinit var adapterContact: AdapterContact
     private lateinit var recyclerView: RecyclerView
     private lateinit var swiperefresh: SwipeRefreshLayout
 
@@ -40,8 +42,10 @@ class listStaffActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.rv_cyclerview)
         swiperefresh = findViewById(R.id.swiperefresh)
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         btn_Create.setOnClickListener {
-            val intent = Intent(this, createActivity::class.java)
+            val intent = Intent(this, CreateActivity::class.java)
             startActivity(intent)
         }
 
@@ -50,15 +54,14 @@ class listStaffActivity : AppCompatActivity() {
 
     private fun initControls() {
         rv_cyclerview.isLongClickable = true
-        adapterEmployee = AdapterEmployee(this, onItemClick,onItemLongClick)
+        adapterContact = AdapterContact(onCLickItem)
         rv_cyclerview.setHasFixedSize(true)
         rv_cyclerview.layoutManager = LinearLayoutManager(this)
-        rv_cyclerview.adapter = adapterEmployee
+        rv_cyclerview.adapter = adapterContact
         mainViewModel.getMutableLiveData(this).observe(this, Observer {
-            adapterEmployee.setList(it as ArrayList<Contact>)
-            adapterEmployee.notifyDataSetChanged()
+            adapterContact.contact = (it as ArrayList<Contact>)
+            adapterContact.notifyDataSetChanged()
         })
-
     }
 
     private fun refreshData(){
@@ -68,31 +71,36 @@ class listStaffActivity : AppCompatActivity() {
         }
     }
 
-
-    private val onItemClick: (Contact)->Unit={
-        val replyintent = Intent(this@listStaffActivity, infoActivity::class.java)
+    private var onCLickItem = object : AdapterContact.onItemClick{
+        override fun onItemClick(contact: Contact) {
+            val replyintent = Intent(this@ListStaffActivity, InfoActivity::class.java)
             val bundle = Bundle()
-            bundle.putSerializable("detailEmployee", it)
+            bundle.putSerializable("detailEmployee", contact)
             replyintent.putExtras(bundle)
             startActivityForResult(replyintent, ActivityRequestCode2)
+        }
+
+        override fun onLongItemClick(contact: Contact) {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(this@ListStaffActivity)
+            builder.setTitle("notification")
+            builder.setMessage("Do you want delete item ?")
+            builder.setCancelable(false)
+            builder.setPositiveButton("Yes")
+            { _, i ->
+                llProgressBarMain.visibility = View.VISIBLE
+                mainViewModel.deleteData(contact.contact_id.toString(),this@ListStaffActivity)
+                llProgressBarMain.visibility = View.GONE
+            }
+            builder.setNegativeButton("No")
+            { dialogInterface, i ->
+                dialogInterface.dismiss()
+            }
+            val alertDialog = builder.create()
+            alertDialog.show()
+        }
+
     }
 
-    private val onItemLongClick: (Contact)->Unit={
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
-        builder.setTitle("notification")
-        builder.setMessage("Do you want delete item ?")
-        builder.setCancelable(false)
-        builder.setPositiveButton("Yes")
-        { _, i ->
-            mainViewModel.DeleteData(it.contact_id.toString())
-        }
-        builder.setNegativeButton("No")
-        { dialogInterface, i ->
-            dialogInterface.dismiss()
-        }
-        val alertDialog = builder.create()
-        alertDialog.show()
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
@@ -106,12 +114,12 @@ class listStaffActivity : AppCompatActivity() {
                 var listResult = if (query!!.isEmpty()) {
                     initControls()
                 } else {
-                    adapterEmployee.exampleList.filter {
+                    adapterContact.contact.filter {
                         it.Name?.toLowerCase()!!.contains(query.toString())
                     }
                 }
-                adapterEmployee.exampleList = listResult as ArrayList<Contact>
-                adapterEmployee.notifyDataSetChanged()
+                adapterContact.contact = listResult as ArrayList<Contact>
+                adapterContact.notifyDataSetChanged()
                 return false
             }
 
@@ -119,14 +127,14 @@ class listStaffActivity : AppCompatActivity() {
                 var listResult = if (newText!!.isEmpty()) {
                      initControls()
                 } else {
-                    adapterEmployee.exampleList.filter {
+                    adapterContact.contact.filter {
                         it.FirstName?.toLowerCase()!!.contains(
                             newText.toString()
                         )
                     }
                 }
-//                adapterEmployee.exampleList = listResult as ArrayList<Contact>
-                adapterEmployee.notifyDataSetChanged()
+//                adapterContact.exampleList = listResult as ArrayList<Contact>
+                adapterContact.notifyDataSetChanged()
                 return false
             }
         })
@@ -139,9 +147,9 @@ class listStaffActivity : AppCompatActivity() {
             R.id.action_sort -> {
                 mainViewModel.getMutableLiveData(this).observe(this,{ it ->
                     it.sortedBy { it.Email }
-                    adapterEmployee.setList(it as ArrayList<Contact>)
+                    adapterContact.contact = (it as ArrayList<Contact>)
                 })
-                adapterEmployee.notifyDataSetChanged()
+                adapterContact.notifyDataSetChanged()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -150,9 +158,10 @@ class listStaffActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume()
+
         initControls()
 
+        super.onResume()
 
     }
 

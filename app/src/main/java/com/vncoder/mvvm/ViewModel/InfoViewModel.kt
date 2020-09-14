@@ -4,15 +4,13 @@ import android.app.Activity
 import android.app.Application
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.vncoder.mvvm.Repository.ContactRepository
-import com.vncoder.mvvm.model.Contact
 import com.vncoder.mvvm.network.RestApiService
 import com.vncoder.mvvm.network.RetrofitInstance
 import com.vncoder.retrofit2_employee.Model.ContactCreate
 import kotlinx.android.synthetic.main.activity_info.*
+import kotlinx.android.synthetic.main.processbar.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,14 +18,13 @@ import retrofit2.Response
 class InfoViewModel(application: Application):ViewModel()  {
 
 
-    fun CreateData(contactCreate: ContactCreate,activity: Activity)  {
-
+    fun createData(contactCreate: ContactCreate,activity: Activity)  {
+        activity.llProgressBarInfo.visibility = View.VISIBLE
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<ContactCreate> = apiService.postContact(contactCreate)
         call.enqueue(object : Callback<ContactCreate> {
             override fun onResponse(call: Call<ContactCreate>, response: Response<ContactCreate>) {
                 if (response.isSuccessful){
-                    activity.llProgressBarInfo.visibility = View.VISIBLE
                     activity.finish()
                     activity.llProgressBarInfo.visibility = View.GONE
                 }
@@ -36,6 +33,11 @@ class InfoViewModel(application: Application):ViewModel()  {
                 Log.d("thisxxx", t.message.toString())
             }
         })
+
+        activity.llProgressBarInfo.btn_cancel.setOnClickListener {
+            call.cancel()
+            activity.llProgressBarInfo.visibility = View.GONE
+        }
     }
 
 

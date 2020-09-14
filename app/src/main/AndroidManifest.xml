@@ -11,9 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.Activity.CreateActivity"></activity>
-        <activity android:name=".View.Activity.infoActivity" />
-        <activity android:name=".View.Activity.ListStaffActivity">
+        <activity android:name=".view.activity.CreateActivity"></activity>
+        <activity android:name=".view.activity.InfoActivity" />
+        <activity android:name=".view.activity.ListStaffActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -18,17 +19,20 @@ import retrofit2.Response
 
 
 class MainViewModel(application: Application) : ViewModel(){
-//    private val contactRepository: ContactRepository = ContactRepository(application)
     private var listContact: ArrayList<Contact> = ArrayList()
+    private val mutableLiveData: MutableLiveData<List<Contact>> = MutableLiveData<List<Contact>>()
 
 
-    fun DeleteData(contactID : String)  {
+    fun deleteData(contactID : String, activity: Activity)  {
+        activity.llProgressBarMain.visibility = View.VISIBLE
         val apiService: RestApiService = RetrofitInstance.instance
         val call: Call<Contact> = apiService.deleteContact(contactID)
         call.enqueue(object : retrofit2.Callback<Contact> {
             override fun onResponse(call: Call<Contact>, response: Response<Contact>) {
                 if (response.isSuccessful) {
-                    getMutableLiveData(Activity())
+                    Toast.makeText(activity,"Delete Success",Toast.LENGTH_LONG).show()
+                    getMutableLiveData(activity)
+
                     Log.d("this1", "error")
                 } else {
                     Log.d("this2", "error")
@@ -38,10 +42,10 @@ class MainViewModel(application: Application) : ViewModel(){
                 Log.d("this3", "error")
             }
         })
-
+        activity.llProgressBarMain.visibility = View.GONE
     }
 
-    private val mutableLiveData: MutableLiveData<List<Contact>> = MutableLiveData<List<Contact>>()
+
 
     fun getMutableLiveData(activity: Activity): MutableLiveData<List<Contact>> {
         val apiService: RestApiService = RetrofitInstance.instance
@@ -49,24 +53,26 @@ class MainViewModel(application: Application) : ViewModel(){
         call.enqueue(object : retrofit2.Callback<JsonObject?> {
             override fun onResponse(call: Call<JsonObject?>?, response: Response<JsonObject?>) {
                 if (response.isSuccessful) {
-                    activity.llProgressBarDetail.visibility = View.VISIBLE
-
+                    activity.llProgressBarMain.visibility = View.VISIBLE
                     val JsonObject: JsonObject = response.body()!!
                     listContact = JsonObject.contacts as ArrayList<Contact>
                     mutableLiveData.value = listContact
-                    activity.llProgressBarDetail.visibility = View.GONE
+                    activity.llProgressBarMain.visibility = View.GONE
                 } else {
+
                     Log.e("error", response.message().toString())
-                }
+                 }
             }
             override fun onFailure(call: Call<JsonObject?>?, t: Throwable) {
+                activity.llProgressBarMain.visibility = View.GONE
+
                 Log.d("ListSize", " - > Error    " + t.message.toString());
             }
         })
         return mutableLiveData
     }
 
-    class NoteViewModelFactory(private val application: Application) :ViewModelProvider.Factory{
+    class MainViewModelFactory(private val application: Application) :ViewModelProvider.Factory{
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)){
